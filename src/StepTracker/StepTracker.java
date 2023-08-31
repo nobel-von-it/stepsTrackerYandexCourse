@@ -109,6 +109,8 @@ public class StepTracker {
                     maxStreak = countStreak;
                 countStreak = 0;
             }
+            if (countStreak > maxStreak)
+                maxStreak = countStreak;
             stepsList.add((i + 1) + " day: " + currentMonthData.steps[i]);
             if (currentMonthData.steps[i] > maxSteps)
                 maxSteps = currentMonthData.steps[i];
