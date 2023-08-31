@@ -10,25 +10,30 @@ public class Main {
             printChoices();
             switch (in.nextInt()) {
                 case 1:
-                    enterSteps();
+                    enterSteps(); //done
                     break;
                 case 2:
-                    printStatistics();
+                    printStatistics(); //done
                     break;
                 case 3:
-                    changeTarget();
+                    changeTarget(); //done
                     break;
                 case 4:
-                    kill();
+                    monthInit();
+                    break;
+                case 5:
+                    kill(); //done
                 default:
                     System.out.println("incorrect input. try again");
             }
         }
     }
     public static void printChoices() {
-        System.out.println("1. enter steps.");
+        System.out.println("you should only enter a number");
+        System.out.println("1. enter steps");
         System.out.println("2. statistics for the month");
         System.out.println("3. change steps target");
-        System.out.println("4. exit");
+        System.out.println("4. initialize month");
+        System.out.println("5. exit");
     }
 }

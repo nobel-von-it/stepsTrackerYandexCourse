@@ -1,11 +1,10 @@
 package StepTracker;
-import java.sql.SQLOutput;
 import java.text.DateFormatSymbols;
 import java.time.Month;
 import java.util.*;
 
 public class StepTracker {
-    static class MonthData {
+    public static class MonthData {
         String monthName;
         int[] days;
         int[] steps;
@@ -31,11 +30,11 @@ public class StepTracker {
         Scanner in = new Scanner(System.in);
         System.out.println("enter new target");
         stepTarget = in.nextInt();
-        System.out.println("your target: " + stepTarget + ". right?");
-        String answer = in.next();
-        if (answer.equals("no")) {
+        if (stepTarget <= 0) {
+            System.out.println("error. step target must be positive");
             changeTarget();
         }
+        System.out.println("your target: " + stepTarget);
     }
     static HashMap<Integer, MonthData> monthDataHashMap = new HashMap<>();
 
@@ -44,6 +43,7 @@ public class StepTracker {
             monthDataHashMap.put(i, new MonthData(new DateFormatSymbols().getMonths()[i-1], new int[30], new int[30]));
         }
     }
+
     public static void enterSteps() {
         Scanner in = new Scanner(System.in);
 
@@ -85,9 +85,56 @@ public class StepTracker {
         return Month.valueOf(month.toUpperCase()).getValue();
     }
     public static void printStatistics() {
-        System.out.println(monthDataHashMap);
+        Scanner in = new Scanner(System.in);
+        System.out.println("enter month number");
+        List<String > stepsList = new ArrayList<>();
+        int monthNumber = in.nextInt();
+        int totalSteps = 0, maxSteps = -1, averageSteps, maxStreak = -1, countStreak = 0;
+        double calorie, distance;
+
+        MonthData currentMonthData = monthDataHashMap.get(monthNumber);
+        for (int i = 0; i < currentMonthData.days.length; i++) {
+            totalSteps += currentMonthData.steps[i];
+            if (currentMonthData.steps[i] >= stepTarget) {
+                countStreak++;
+            } else {
+                if (countStreak > maxStreak)
+                    maxStreak = countStreak;
+                countStreak = 0;
+            }
+            stepsList.add((i+1) + " day: " + currentMonthData.steps[i]);
+            if (currentMonthData.steps[i] > maxSteps)
+                maxSteps = currentMonthData.steps[i];
+        }
+        averageSteps = totalSteps / 30;
+        distance = ((double) totalSteps * 75) / 100000;
+        calorie = ((double) totalSteps * 50) / 1000;
+
+
+        System.out.println(stepsList.toString());
+        System.out.println("total monthly steps: " + totalSteps);
+        System.out.println("max daily steps: " + maxSteps);
+        System.out.println("average monthly steps: " + averageSteps);
+        System.out.println("total distance: " + distance + " km");
+        System.out.println("lost calorie: " + calorie + " kcal");
+        System.out.println("maximum goal streak: " + maxStreak);
     }
     public static void kill() {
         System.exit(0);
+    }
+
+    public static void monthInit() {
+        Scanner in = new Scanner(System.in);
+        System.out.println("enter the number of the month you want to initialize");
+        int monthNumber = in.nextInt();
+        Random random = new Random();
+        int[] days = new int[30];
+        int[] steps = new int[30];
+        for (int i = 0; i < 30; i++) {
+            days[i] = i+1;
+            steps[i] = random.nextInt(3000) + 8000;
+        }
+        monthDataHashMap.put(monthNumber,
+                new MonthData(new DateFormatSymbols().getMonths()[monthNumber-1], days, steps));
     }
 }
