@@ -140,6 +140,7 @@ public class StepTracker {
         Scanner in = new Scanner(System.in);
         System.out.println("enter the number of the month you want to initialize");
         int monthNumber = in.nextInt();
+        String monthName = new DateFormatSymbols().getMonths()[monthNumber-1];
         Random random = new Random();
         int[] days = new int[30];
         int[] steps = new int[30];
@@ -147,6 +148,7 @@ public class StepTracker {
             days[i] = i + 1;
             steps[i] = random.nextInt(3000) + 8000;
         }
+        System.out.printf("%s initialized\n", monthName.toLowerCase());
         monthDataHashMap.put(monthNumber,
                 new MonthData(new DateFormatSymbols().getMonths()[monthNumber - 1], days, steps));
     }
