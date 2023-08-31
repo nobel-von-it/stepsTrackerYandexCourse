@@ -1,5 +1,7 @@
 package StepTracker;
+
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.time.Month;
 import java.util.*;
 
@@ -26,6 +28,7 @@ public class StepTracker {
     }
 
     static int stepTarget = 10000;
+
     public static void changeTarget() {
         Scanner in = new Scanner(System.in);
         System.out.println("enter new target");
@@ -36,11 +39,12 @@ public class StepTracker {
         }
         System.out.println("your target: " + stepTarget);
     }
+
     static HashMap<Integer, MonthData> monthDataHashMap = new HashMap<>();
 
     public static void initMonthDataHashMap() {
         for (int i = 1; i <= 12; i++) {
-            monthDataHashMap.put(i, new MonthData(new DateFormatSymbols().getMonths()[i-1], new int[30], new int[30]));
+            monthDataHashMap.put(i, new MonthData(new DateFormatSymbols().getMonths()[i - 1], new int[30], new int[30]));
         }
     }
 
@@ -70,8 +74,8 @@ public class StepTracker {
             }
             if (monthDataHashMap.containsKey(monthNumber)) {
                 MonthData tmpMonthData = monthDataHashMap.get(getMonthNumber(month));
-                tmpMonthData.days[day-1] = day;
-                tmpMonthData.steps[day-1] = step;
+                tmpMonthData.days[day - 1] = day;
+                tmpMonthData.steps[day - 1] = step;
                 monthDataHashMap.put(monthNumber, tmpMonthData);
             }
             System.out.println("continue?");
@@ -81,16 +85,19 @@ public class StepTracker {
             }
         }
     }
+
     private static int getMonthNumber(String month) {
         return Month.valueOf(month.toUpperCase()).getValue();
     }
+
     public static void printStatistics() {
         Scanner in = new Scanner(System.in);
         System.out.println("enter month number");
-        List<String > stepsList = new ArrayList<>();
+        List<String> stepsList = new ArrayList<>();
         int monthNumber = in.nextInt();
         int totalSteps = 0, maxSteps = -1, averageSteps, maxStreak = -1, countStreak = 0;
-        double calorie, distance;
+        String  calorie, distance;
+        DecimalFormat f = new DecimalFormat("##.00");
 
         MonthData currentMonthData = monthDataHashMap.get(monthNumber);
         for (int i = 0; i < currentMonthData.days.length; i++) {
@@ -102,23 +109,27 @@ public class StepTracker {
                     maxStreak = countStreak;
                 countStreak = 0;
             }
-            stepsList.add((i+1) + " day: " + currentMonthData.steps[i]);
+            stepsList.add((i + 1) + " day: " + currentMonthData.steps[i]);
             if (currentMonthData.steps[i] > maxSteps)
                 maxSteps = currentMonthData.steps[i];
         }
         averageSteps = totalSteps / 30;
-        distance = ((double) totalSteps * 75) / 100000;
-        calorie = ((double) totalSteps * 50) / 1000;
+        distance = f.format(((double) totalSteps * 75) / 100000);
+        calorie = f.format(((double) totalSteps * 50) / 1000);
 
-
-        System.out.println(stepsList.toString());
-        System.out.println("total monthly steps: " + totalSteps);
-        System.out.println("max daily steps: " + maxSteps);
-        System.out.println("average monthly steps: " + averageSteps);
-        System.out.println("total distance: " + distance + " km");
-        System.out.println("lost calorie: " + calorie + " kcal");
-        System.out.println("maximum goal streak: " + maxStreak);
+        System.out.printf("""
+                days data
+                %s
+                other data:
+                total monthly steps: %d,
+                max daily steps: %d,
+                average monthly steps: %d,
+                total distance in km: %s km,
+                lost calorie: %s kcal,
+                maximum goal streak: %d.
+                """, stepsList, totalSteps, maxSteps, averageSteps, distance, calorie, maxStreak);
     }
+
     public static void kill() {
         System.exit(0);
     }
@@ -131,10 +142,10 @@ public class StepTracker {
         int[] days = new int[30];
         int[] steps = new int[30];
         for (int i = 0; i < 30; i++) {
-            days[i] = i+1;
+            days[i] = i + 1;
             steps[i] = random.nextInt(3000) + 8000;
         }
         monthDataHashMap.put(monthNumber,
-                new MonthData(new DateFormatSymbols().getMonths()[monthNumber-1], days, steps));
+                new MonthData(new DateFormatSymbols().getMonths()[monthNumber - 1], days, steps));
     }
 }
